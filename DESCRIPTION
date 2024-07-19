@@ -1,0 +1,29 @@
+Type: Package
+Package: outscrapr
+Title: Unofficial Uncompleted Outscraper API
+Version: 0.0.0.9000
+Authors@R: 
+    person("Corrado", "Lanera", , "corrado.lanera@ubep.unipd.it", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-0520-7428"))
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: Implement simplified versions of a few Outscraper API
+    endpoints.
+License: MIT + file LICENSE
+Imports: 
+    httr,
+    jsonlite,
+    lifecycle,
+    stringr
+Suggests: 
+    checkmate,
+    devtools,
+    lintr,
+    spelling,
+    testthat (>= 3.0.0),
+    withr
+Config/testthat/edition: 3
+Encoding: UTF-8
+Language: en-US
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2

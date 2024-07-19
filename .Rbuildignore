@@ -1,0 +1,6 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
+^dev/
+^README\.Rmd$
+^CODE_OF_CONDUCT\.md$
