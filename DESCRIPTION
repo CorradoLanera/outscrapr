@@ -1,7 +1,7 @@
 Type: Package
 Package: outscrapr
 Title: Unofficial Uncompleted Outscraper API
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: 
     person("Corrado", "Lanera", , "corrado.lanera@ubep.unipd.it", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-0520-7428"))

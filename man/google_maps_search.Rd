@@ -9,7 +9,7 @@ google_maps_search(
   limit = 10,
   drop_duplicates = FALSE,
   coordinates = NULL,
-  skipPlaces = 0,
+  skip_places = 0,
   language = "en",
   region = NULL,
   async = FALSE,
@@ -32,9 +32,10 @@ queries inside one request.}
 \item{coordinates}{(chr) The parameter defines the coordinates of the
 location where you want your query to be applied. It has to be
 constructed in the next sequence: \code{paste0(latitude, ", ", longitude)}, e.g. \code{"(41.3954381,2.1628662)"}. Often, you can find
-this value while visiting \href{https://www.google.com/maps/search/restaurants,+Manhattan,+New+York,+NY,+USA/@40.7510123,-73.9803871,13.68z}{Google Maps}.}
+this value while visiting
+\href{https://www.google.com/maps/search/restaurants,+Manhattan,+New+York,+NY,+USA/@40.7510123,-73.9803871,13.68z}{Google Maps}.}
 
-\item{skipPlaces}{(int) Skip first N places, where N should be
+\item{skip_places}{(int) Skip first N places, where N should be
 multiple to 20 (e.g. 0, 20, 40). It's commonly used in pagination.}
 
 \item{language}{(chr, default = "en") the language to use for
@@ -96,7 +97,8 @@ query into subqueries in order to get all the places inside. (e.g.,
 When \code{TRUE} the bot combines results from each
 query inside one big array (\verb{\{'data': [...]\}} instead of \verb{\{'data': [[...], [...], [...]]\}}). If the amount of ignored rows are less than
 5,000\% of what was actually extracted, you won't be billed for
-ignored records.
+ignored records. Anyway, the results of \code{google_map_search} is
+always a single tibble with all the places.
 }
 
 \subsection{Async}{
