@@ -33,6 +33,49 @@ You can install the development version of `{outscrapr}` like so:
 devtools::install_github("CorradoLanera/outscrapr")
 ```
 
+## Places
+
+### Single query
+```{r}
+library(outscrapr)
+
+# Get your API key from https://outscraper.com/ and set it as the environment variable `OUTSCRAPER_API_KEY`
+query <- "restaurants, Brooklyn 11203"
+
+restaurants <- google_maps_search(query = query, limit = 2)
+
+restaurants
+
+restaurants$working_hours
+restaurants$about
+restaurants$about$`Popular for`
+restaurants$reviews_per_score
+```
+
+### Multiple queries
+You can retrieve max 500 places per one query search on Google Maps.
+For densely populated areas you might want to split your query into
+subqueries in order to get all the places inside.
+(e.g., `c("restaurants, Brooklyn 11211", "restaurants, Brooklyn 11215")`).
+
+```{r}
+queries <- c(
+  "restaurants, Brooklyn 11211",
+  "restaurants, Brooklyn 11215"
+)
+
+# Results' limit refers to the number of places to retrieve for each
+# query. The results of all queries are combined into a single tibble.
+multi_restaurants <- google_maps_search(query = queries, limit = 2)
+multi_restaurants
+multi_restaurants$working_hours
+multi_restaurants$about
+multi_restaurants$about$Highlights
+multi_restaurants$reviews_per_score
+```
+
+
+
 ## Code of Conduct
 
 Please note that the outscrapr project is released with a [Contributor Code of Conduct](https://contributor-covenant.org/version/2/1/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.

@@ -1,3 +1,5 @@
-# outscrapr (development version)
+# outscrapr 0.0.1
 
-* Setup pkg development environment
+* Added `google_maps_search` function.
+* Added GH actions for CI/CD and pkgdown.
+* Setup pkg development environment.

@@ -8,6 +8,13 @@
 \description{
 A simplified versions of a few [Outscraper](https://outscraper.com/) API endpoints.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://corradolanera.github.io/outscrapr/}
+}
+
+}
 \author{
 \strong{Maintainer}: Corrado Lanera \email{corrado.lanera@ubep.unipd.it} (\href{https://orcid.org/0000-0002-0520-7428}{ORCID})
 
