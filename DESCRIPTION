@@ -9,13 +9,16 @@ Maintainer: The package maintainer <yourself@somewhere.net>
 Description: A simplified versions of a few
     [Outscraper](https://outscraper.com/) API endpoints.
 License: MIT + file LICENSE
+URL: https://corradolanera.github.io/outscrapr/
 Imports: 
+    checkmate,
     httr,
     jsonlite,
     lifecycle,
-    stringr
+    purrr,
+    stringr,
+    tibble
 Suggests: 
-    checkmate,
     devtools,
     lintr,
     spelling,
@@ -27,4 +30,3 @@ Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
-URL: https://corradolanera.github.io/outscrapr/
