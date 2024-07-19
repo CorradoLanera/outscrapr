@@ -6,8 +6,8 @@ Authors@R:
     person("Corrado", "Lanera", , "corrado.lanera@ubep.unipd.it", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-0520-7428"))
 Maintainer: The package maintainer <yourself@somewhere.net>
-Description: Implement simplified versions of a few Outscraper API
-    endpoints.
+Description: A simplified versions of a few
+    [Outscraper](https://outscraper.com/) API endpoints.
 License: MIT + file LICENSE
 Imports: 
     httr,
