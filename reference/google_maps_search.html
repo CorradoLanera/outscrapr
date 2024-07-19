@@ -9,7 +9,7 @@ queries)."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">outscrapr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,7 +46,7 @@ queries).</p>
 <span>  limit <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  drop_duplicates <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  coordinates <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  skipPlaces <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  skip_places <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  language <span class="op">=</span> <span class="st">"en"</span>,</span>
 <span>  region <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  async <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -80,10 +80,11 @@ queries inside one request.</p></dd>
 <dd><p>(chr) The parameter defines the coordinates of the
 location where you want your query to be applied. It has to be
 constructed in the next sequence: <code>paste0(latitude, ", ", longitude)</code>, e.g. <code>"(41.3954381,2.1628662)"</code>. Often, you can find
-this value while visiting <a href="https://www.google.com/maps/search/restaurants,+Manhattan,+New+York,+NY,+USA/@40.7510123,-73.9803871,13.68z" class="external-link">Google Maps</a>.</p></dd>
+this value while visiting
+<a href="https://www.google.com/maps/search/restaurants,+Manhattan,+New+York,+NY,+USA/@40.7510123,-73.9803871,13.68z" class="external-link">Google Maps</a>.</p></dd>
 
 
-<dt id="arg-skipplaces">skipPlaces<a class="anchor" aria-label="anchor" href="#arg-skipplaces"></a></dt>
+<dt id="arg-skip-places">skip_places<a class="anchor" aria-label="anchor" href="#arg-skip-places"></a></dt>
 <dd><p>(int) Skip first N places, where N should be
 multiple to 20 (e.g. 0, 20, 40). It's commonly used in pagination.</p></dd>
 
@@ -156,7 +157,8 @@ query into subqueries in order to get all the places inside. (e.g.,
 <p>When <code>TRUE</code> the bot combines results from each
 query inside one big array (<code>{'data': [...]}</code> instead of <code>{'data': [[...], [...], [...]]}</code>). If the amount of ignored rows are less than
 5,000% of what was actually extracted, you won't be billed for
-ignored records.</p>
+ignored records. Anyway, the results of <code>google_map_search</code> is
+always a single tibble with all the places.</p>
 </div>
 
 <div class="section">
@@ -197,12 +199,12 @@ response speed.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="co"># single</span></span></span>
-<span class="r-in"><span>  <span class="fu">google_maps_search</span><span class="op">(</span><span class="st">"pizzeria, New York"</span>, limit <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu">google_maps_search</span><span class="op">(</span><span class="st">"pizzeria, New York"</span>, limit <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="co"># multiple</span></span></span>
 <span class="r-in"><span>  <span class="fu">google_maps_search</span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pizzeria, New York"</span>, <span class="st">"pizzeria, Chicago"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    limit <span class="op">=</span> <span class="fl">2</span>  <span class="co"># each query will return 2 places max</span></span></span>
+<span class="r-in"><span>    limit <span class="op">=</span> <span class="fl">1</span>  <span class="co"># each query will return 2 places max</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
