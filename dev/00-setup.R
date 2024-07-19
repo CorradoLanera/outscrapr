@@ -23,7 +23,6 @@ use_github(organisation = "CorradoLanera", protocol = "ssh")
 use_coverage(repo_spec = "CorradoLanera/outscrapr")
 use_github_action("test-coverage", badge = TRUE)
 use_github_action("check-standard", badge = TRUE)
-use_github_action("lint", badge = TRUE)
 use_pkgdown_github_pages()
 
 
