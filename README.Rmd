@@ -44,11 +44,13 @@ library(outscrapr)
 query <- "restaurants, Brooklyn 11203"
 
 restaurants <- google_maps_search(query = query, limit = 2)
-
-restaurants
+restaurants |> 
+  tibble::as_tibble()
 
 restaurants$working_hours
-restaurants$about
+restaurants$about |> 
+  tibble::as_tibble()
+
 restaurants$about$`Popular for`
 restaurants$reviews_per_score
 ```
@@ -68,9 +70,13 @@ queries <- c(
 # Results' limit refers to the number of places to retrieve for each
 # query. The results of all queries are combined into a single tibble.
 multi_restaurants <- google_maps_search(query = queries, limit = 2)
-multi_restaurants
+multi_restaurants |> 
+  tibble::as_tibble()
+
 multi_restaurants$working_hours
-multi_restaurants$about
+multi_restaurants$about |> 
+  tibble::as_tibble()
+
 multi_restaurants$about$Highlights
 multi_restaurants$reviews_per_score
 ```
@@ -85,16 +91,23 @@ library(outscrapr)
 query <- "restaurants, Brooklyn 11203"
 
 restaurant <- google_maps_search(query = query, limit = 1)
-restaurant
+restaurant |> 
+  tibble::as_tibble()
 
 reviews <- restaurant[["place_id"]] |> 
   google_maps_reviews(reviews_limit = 2)
 
-reviews
+reviews |> 
+  tibble::as_tibble()
+
 identical(reviews$place_id, restaurant$place_id)
 
-reviews$reviews
-reviews$reviews_data
+reviews$reviews |> 
+  tibble::as_tibble()
+
+reviews$reviews_data[[1]] |> 
+  tibble::as_tibble()
+
 reviews$reviews_data[[1]]$review_text
 
 reviews$reviews_data[[1]]$review_questions
