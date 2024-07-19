@@ -150,7 +150,9 @@ maximum response speed.
 if (FALSE) {
   # single
   google_maps_search("pizzeria, New York", limit = 1)[["place_id"]] |>
-    google_maps_reviews(reviews_limit = 2)
-
+    google_maps_reviews(reviews_limit = 2) |>
+    dplyr::pull("reviews_data") |>
+    purrr::pluck(1) |>
+    dplyr::select(review_text)
 }
 }
