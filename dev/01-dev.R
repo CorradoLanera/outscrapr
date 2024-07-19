@@ -4,6 +4,7 @@ use_package("jsonlite")
 use_package("stringr")
 use_package("checkmate")
 use_package("purrr")
+use_package("usethis")
 use_tibble()
 
 use_package("devtools", type = "Suggests")

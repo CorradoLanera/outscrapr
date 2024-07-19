@@ -17,7 +17,8 @@ Imports:
     lifecycle,
     purrr,
     stringr,
-    tibble
+    tibble,
+    usethis
 Suggests: 
     devtools,
     lintr,

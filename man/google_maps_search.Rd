@@ -130,12 +130,12 @@ response speed.
 \examples{
 if (FALSE) {
   # single
-  google_maps_search("pizzeria, New York", limit = 2)
+  google_maps_search("pizzeria, New York", limit = 1)
 
   # multiple
   google_maps_search(
     c("pizzeria, New York", "pizzeria, Chicago"),
-    limit = 2  # each query will return 2 places max
+    limit = 1  # each query will return 2 places max
   )
 }
 }

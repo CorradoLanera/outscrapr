@@ -33,6 +33,25 @@ You can install the development version of `{outscrapr}` like so:
 devtools::install_github("CorradoLanera/outscrapr")
 ```
 
+## Places
+
+```{r}
+library(outscrapr)
+
+# Get your API key from https://outscraper.com/ and set it as the environment variable `OUTSCRAPER_API_KEY`
+query <- "restaurants, Brooklyn 11203"
+
+restaurants <- google_maps_search(query = query, limit = 2)
+
+restaurants
+
+restaurants$working_hours
+restaurants$about
+restaurants$about$`Popular for`
+restaurants$reviews_per_score
+```
+
+
 ## Code of Conduct
 
 Please note that the outscrapr project is released with a [Contributor Code of Conduct](https://contributor-covenant.org/version/2/1/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.

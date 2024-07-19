@@ -17,9 +17,9 @@
 #'   location where you want your query to be applied. It has to be
 #'   constructed in the next sequence: `paste0(latitude, ", ",
 #'   longitude)`, e.g. `"(41.3954381,2.1628662)"`. Often, you can find
-#'   this value while visiting [Google
-#'   Maps](https://www.google.com/maps/search/restaurants,+Manhattan,+New+York,+NY,+USA/@40.7510123,-73.9803871,13.68z).
-#' @param skipPlaces (int) Skip first N places, where N should be
+#'   this value while visiting
+#'   [Google Maps](https://www.google.com/maps/search/restaurants,+Manhattan,+New+York,+NY,+USA/@40.7510123,-73.9803871,13.68z).
+#' @param skip_places (int) Skip first N places, where N should be
 #'   multiple to 20 (e.g. 0, 20, 40). It's commonly used in pagination.
 #' @param language (chr, default = "en") the language to use for
 #'   website.
@@ -64,7 +64,8 @@
 #' query inside one big array (`{'data': [...]}` instead of `{'data':
 #' [[...], [...], [...]]}`). If the amount of ignored rows are less than
 #' 5,000% of what was actually extracted, you won't be billed for
-#' ignored records.
+#' ignored records. Anyway, the results of `google_map_search` is
+#' always a single tibble with all the places.
 #'
 #' ## Async
 #' A good practice is to send async requests and start checking
@@ -96,32 +97,31 @@
 #' @examples
 #' if (FALSE) {
 #'   # single
-#'   google_maps_search("pizzeria, New York", limit = 2)
+#'   google_maps_search("pizzeria, New York", limit = 1)
 #'
 #'   # multiple
 #'   google_maps_search(
 #'     c("pizzeria, New York", "pizzeria, Chicago"),
-#'     limit = 2  # each query will return 2 places max
+#'     limit = 1  # each query will return 2 places max
 #'   )
 #' }
 google_maps_search <- function(
-    query,
-    limit = 10,
-    drop_duplicates = FALSE,
-    coordinates = NULL,
-    skipPlaces = 0,
-    language = "en",
-    region = NULL,
-    async = FALSE,
-    api_key = Sys.getenv("OUTSCRAPER_API_KEY")
-
+  query,
+  limit = 10,
+  drop_duplicates = FALSE,
+  coordinates = NULL,
+  skip_places = 0,
+  language = "en",
+  region = NULL,
+  async = FALSE,
+  api_key = Sys.getenv("OUTSCRAPER_API_KEY")
 ) {
   checkmate::assert_character(query)
   limit |>
     checkmate::assert_integerish(upper = 500, null.ok = TRUE, len = 1)
   checkmate::assert_logical(drop_duplicates)
   checkmate::assert_character(coordinates, null.ok = TRUE)
-    skipPlaces |>
+  skip_places |>
     checkmate::assert_integerish(lower = 0, len = 1, null.ok = TRUE)
   checkmate::assert_logical(async)
   checkmate::assert_character(api_key)
@@ -180,7 +180,7 @@ google_maps_search <- function(
       limit = limit,
       dropDuplicates = drop_duplicates,
       coordinates = coordinates,
-      skipPlaces = skipPlaces,
+      skipPlaces = skip_places,
       language = language,
       region = region,
       async = async
