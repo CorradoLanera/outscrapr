@@ -1,30 +1,48 @@
-#' Google Maps Search
+#' Google Maps Reviews
 #'
-#' Search for places on Google Maps based on a given query (or many
-#' queries).
+#' Returns Google Maps reviews from places when using search queries
+#' (e.g., `"restaurants, Manhattan, NY, USA"`) or from a single place
+#' when using Google IDs or names (e.g., `"NoMad Restaurant, NY, USA"`,
+#' `"0x886916e8bc273979:0x5141fcb11460b226"`). In addition to the
+#' reviews, it returns places information.
 #'
 #'
-#' @param query (chr) the query you want to search. You
-#'   can use anything that you would use on a regular Google Maps site.
-#'   Additionally, you can use google_id (feature_id), place_id, or CID.
-#' @param limit (int, default = 10) The parameter specifies the limit
-#'   of organizations to take from one query search.
-#' @param drop_duplicates (lgl, default = FALSE) The parameter specifies
-#'   whether the bot will drop the same organizations from different
-#'   queries. It makes sense when you use batching and send multiple
-#'   queries inside one request.
-#' @param coordinates (chr) The parameter defines the coordinates of the
-#'   location where you want your query to be applied. It has to be
-#'   constructed in the next sequence: `paste0(latitude, ", ",
-#'   longitude)`, e.g. `"(41.3954381,2.1628662)"`. Often, you can find
-#'   this value while visiting
-#'   [Google Maps](https://www.google.com/maps/search/restaurants,+Manhattan,+New+York,+NY,+USA/@40.7510123,-73.9803871,13.68z).
-#' @param skip_places (int) Skip first N places, where N should be
-#'   multiple to 20 (e.g. 0, 20, 40). It's commonly used in pagination.
+#' @param query (chr) the query you want to search. You can use anything
+#'   that you would use on a regular Google Maps site. Additionally, you
+#'   can use google_id (feature_id), place_id, or CID.
+#' @param reviews_limit (int, default = 10) The parameter specifies the
+#'   limit of reviews to get from one place (0 = unlimited).
+#' @param reviews_query (chr) The parameter specifies the query to
+#'   search among the reviews (e.g. `wow`, `amazing | great`).
+#' @param limit (int, default = 10) The parameter specifies the limit of
+#'   organizations to take from one query search.
+#' @param sort (chr, default = "most_relevant") one of the sorting
+#'   types: "most_relevant", "newest", "highest_rating",
+#'   "lowest_rating".
+#' @param last_pagination_id (chr) the `review_pagination_id` of the
+#'   last item. It's commonly used in pagination.
+#' @param start (int) the start timestamp value for reviews (newest
+#'   review). The current timestamp is used when the value is not
+#'   provided. Using the `start` parameter overwrites the `sort`
+#'   parameter to `newest`. Therefore, the latest reviews will be at the
+#'   beginning.
+#' @param cutoff (int) the oldest timestamp value for reviews (oldest
+#'   review). Using the `cutoff` parameter overwrites `sort` parameter
+#'   to `newest`. Therefore, the latest reviews will be at the
+#'   beginning.
+#' @param cutoff_rating (int) the maximum for `lowest_rating` sorting or
+#'   the minimum for `highest_rating` sorting rating for reviews. Using
+#'   the `cutoff_rating` requires sorting to be set to `lowest_rating`
+#'   or `highest_rating`.
+#' @param ignore_empty (lgl, default = TRUE) whether to ignore reviews
+#'   without text or not.
 #' @param language (chr, default = "en") the language to use for
 #'   website.
 #' @param region (chr, default = NULL) the country to use for website.
 #'   It's recommended to use it for a better search experience.
+#' @param fields (chr) which fields you want to include with each item
+#'   returned in the response. By default, it returns all fields. Use
+#'   `&fields=query,name` to return only the specific ones.
 #' @param async (lgl, default = FALSE) The parameter defines the way you
 #'   want to submit your task to Outscraper. It can be set to `FALSE` to
 #'   open an HTTP connection and keep it open until you got your
@@ -35,6 +53,14 @@
 #' @param api_key (chr, default = Sys.getenv("OUTSCRAPER_API_KEY")) Your
 #'   API key. You can get it by registering on
 #'   [Outscraper](https://outscraper.com/).
+#' @param ui (lgl, default = FALSE) whether a task will be executed as a
+#'   UI task. This is commonly used when you want to create a regular
+#'   platform task with API. Using this parameter overwrites the async
+#'   parameter to true.
+#' @param webhook (chr, default = NULL) defines the URL address
+#'   (callback) to which Outscraper will create a 57POST request with a
+#'   JSON body once a task/request is finished. Using this parameter
+#'   overwrites the webhook from integrations.
 #'
 #' @details
 #'
@@ -53,20 +79,6 @@
 #' want to check out the web application to play with locations and
 #' categories that we would suggest.
 #'
-#' ## Limit
-#' There are no more than 500 places per one query search on
-#' Google Maps. For densely populated areas you might want to split your
-#' query into subqueries in order to get all the places inside. (e.g.,
-#' `c("restaurants, Brooklyn 11211", "restaurants, Brooklyn 11215")`).
-#'
-#' ## Drop duplicates
-#' When `TRUE` the bot combines results from each
-#' query inside one big array (`{'data': [...]}` instead of `{'data':
-#' [[...], [...], [...]]}`). If the amount of ignored rows are less than
-#' 5,000% of what was actually extracted, you won't be billed for
-#' ignored records. Anyway, the results of `google_map_search` is
-#' always a single tibble with all the places.
-#'
 #' ## Async
 #' A good practice is to send async requests and start checking
 #' the results after the estimated execution time. Check out this Python
@@ -75,55 +87,61 @@
 #' As most of the requests take some time to be executed the `async =
 #' TRUE` option is preferred to avoid HTTP requests timeouts.
 #'
-#' ## Results
-#' The results from searches are the same as you would see by
-#' visiting a regular Google Maps site. However, in most cases, it's
-#' important to use locations inside queries (e.g., bars, NY, USA) as
-#' the IP addresses of Outscraper's servers might be located in
-#' different countries.
-#'
 #' ## Optimization
-#' In case no places were found by your search criteria,
-#' your search request will consume the usage of one place.
+#' In case no reviews were found by your search criteria, your search
+#' request will consume the usage of one review.
 #'
 #' This endpoint is optimized for fast responses and can be used as a
-#' real-time API. Set the limit parameter to 10 to achieve the maximum
-#' response speed.
+#' real-time API. Set the reviewsLimit parameter to 10 to achieve the
+#' maximum response speed.
 #'
-#' @return a [tibble][tibble::tibble-package] with places from Google
-#'   Maps on each row, based on a given search query (or many queries).
+#' @return a [tibble][tibble::tibble-package] of reviews from Google
+#'   Maps based on a given search query (or many queries).
 #' @export
 #'
 #' @examples
 #' if (FALSE) {
 #'   # single
-#'   google_maps_search("pizzeria, New York", limit = 1)
-#'
-#'   # multiple
-#'   google_maps_search(
-#'     c("pizzeria, New York", "pizzeria, Chicago"),
-#'     limit = 1  # each query will return 2 places max
-#'   )
+#'   google_maps_search("pizzeria, New York", limit = 1)[["place_id"]] |>
+#'     google_maps_reviews(reviews_limit = 2) |>
+#'     dplyr::pull("reviews_data") |>
+#'     purrr::pluck(1) |>
+#'     dplyr::select(review_text)
 #' }
-google_maps_search <- function(
+google_maps_reviews <- function(
   query,
-  limit = 10,
-  drop_duplicates = FALSE,
-  coordinates = NULL,
-  skip_places = 0,
+  reviews_limit = 10,
+  reviews_query = NULL,
+  limit = 1,
+  sort = c("most_relevant", "newest", "highest_rating", "lowest_rating"),
+  last_pagination_id = NULL,
+  start = NULL,
+  cutoff = NULL,
+  cutoff_rating = NULL,
+  ignore_empty = TRUE,
   language = "en",
   region = NULL,
+  fields = NULL,
   async = FALSE,
+  ui = FALSE,
+  webhook = NULL,
   api_key = Sys.getenv("OUTSCRAPER_API_KEY")
 ) {
   checkmate::assert_character(query)
+  reviews_limit |>
+    checkmate::assert_integerish(lower = 0, len = 1)
+  checkmate::assert_string(reviews_query, null.ok = TRUE)
   limit |>
     checkmate::assert_integerish(upper = 500, null.ok = TRUE, len = 1)
-  checkmate::assert_logical(drop_duplicates)
-  checkmate::assert_character(coordinates, null.ok = TRUE)
-  skip_places |>
-    checkmate::assert_integerish(lower = 0, len = 1, null.ok = TRUE)
+  sort <- match.arg(sort)
+  checkmate::assert_string(last_pagination_id, null.ok = TRUE)
+  checkmate::assert_integerish(start, null.ok = TRUE)
+  checkmate::assert_integerish(cutoff, null.ok = TRUE)
+  checkmate::assert_integerish(cutoff_rating, null.ok = TRUE)
+  checkmate::assert_logical(ignore_empty)
   checkmate::assert_logical(async)
+  checkmate::assert_logical(ui)
+  checkmate::assert_character(webhook, null.ok = TRUE)
   checkmate::assert_character(api_key)
 
   languages <- c(
@@ -168,22 +186,30 @@ google_maps_search <- function(
   checkmate::assert_choice(language, languages)
   checkmate::assert_choice(region, regions, null.ok = TRUE)
 
-  response <- httr::POST(
-    "https://api.app.outscraper.com/maps/search-v3",
+  response <- httr::GET(
+    "https://api.app.outscraper.com/maps/reviews-v3",
     httr::add_headers(
       "X-API-KEY" = api_key
     ),
     httr::content_type_json(),
     encode = "json",
-    body = list(
+    query = list(
       query = as.list(query),
+      reviewsLimit = reviews_limit,
+      reviewsQuery = reviews_query,
       limit = limit,
-      dropDuplicates = drop_duplicates,
-      coordinates = coordinates,
-      skipPlaces = skip_places,
+      sort = sort,
+      lastPaginationId = last_pagination_id,
+      start = start,
+      cutoff = cutoff,
+      cutoffRating = cutoff_rating,
+      ignoreEmpty = ignore_empty,
       language = language,
       region = region,
-      async = async
+      fields = fields,
+      async = async,
+      ui = ui,
+      webhook = webhook
     )
   )
 
@@ -204,15 +230,4 @@ google_maps_search <- function(
   }
 
   get_content(parsed)
-}
-
-#' Get Outscraper content
-#'
-#' @param parsed (list) the parsed JSON response from Outscraper
-#' @return a [tibble][tibble::tibble-package]
-#' @noRd
-get_content <- function(parsed) {
-  parsed[["data"]] |>
-    (\(x) if (checkmate::test_list(x)) purrr::list_rbind(x) else x)() |>
-    tibble::as_tibble()
 }

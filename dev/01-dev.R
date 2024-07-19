@@ -4,6 +4,7 @@ use_package("jsonlite")
 use_package("stringr")
 use_package("checkmate")
 use_package("purrr")
+use_package("dplyr")
 use_package("usethis")
 use_tibble()
 
@@ -17,5 +18,6 @@ use_tidy_description()
 
 # functions -------------------------------------------------------
 use_r("google_maps_search")
+use_r("google_maps_reviews")
 
 # tests -----------------------------------------------------------

@@ -20,7 +20,7 @@ test_that("google_maps_search works", {
   )
 
   res_multi <- google_maps_search(
-    c("coffee, New York", "resturant, Chicago"),
+    c("coffee7t, New York", "resturant, Chicago"),
     limit = 1
   )
 
