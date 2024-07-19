@@ -39,7 +39,8 @@ devtools::install_github("CorradoLanera/outscrapr")
 ```{r}
 library(outscrapr)
 
-# Get your API key from https://outscraper.com/ and set it as the environment variable `OUTSCRAPER_API_KEY`
+# Get your API key from https://outscraper.com/ and set it as the
+# environment variable `OUTSCRAPER_API_KEY`
 query <- "restaurants, Brooklyn 11203"
 
 restaurants <- google_maps_search(query = query, limit = 2)
@@ -74,6 +75,31 @@ multi_restaurants$about$Highlights
 multi_restaurants$reviews_per_score
 ```
 
+## Reviews
+
+```{r}
+library(outscrapr)
+
+# Get your API key from https://outscraper.com/ and set it as the
+# environment variable `OUTSCRAPER_API_KEY`
+query <- "restaurants, Brooklyn 11203"
+
+restaurant <- google_maps_search(query = query, limit = 1)
+restaurant
+
+reviews <- restaurant[["place_id"]] |> 
+  google_maps_reviews(reviews_limit = 2)
+
+reviews
+identical(reviews$place_id, restaurant$place_id)
+
+reviews$reviews
+reviews$reviews_data
+reviews$reviews_data[[1]]$review_text
+
+reviews$reviews_data[[1]]$review_questions
+reviews$reviews_data[[1]]$owner_answer
+```
 
 
 ## Code of Conduct

@@ -21,6 +21,7 @@ Imports:
     usethis
 Suggests: 
     devtools,
+    dplyr,
     lintr,
     spelling,
     testthat (>= 3.0.0),

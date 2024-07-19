@@ -57,8 +57,8 @@ API key. You can get it by registering on
 \href{https://outscraper.com/}{Outscraper}.}
 }
 \value{
-A list with places from Google Maps based on a given search
-query (or many queries).
+a \link[tibble:tibble-package]{tibble} with places from Google
+Maps on each row, based on a given search query (or many queries).
 }
 \description{
 Search for places on Google Maps based on a given query (or many
