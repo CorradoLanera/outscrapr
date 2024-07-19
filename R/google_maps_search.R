@@ -209,8 +209,8 @@ google_maps_search <- function(
 #' Get Outscraper content
 #'
 #' @param parsed (list) the parsed JSON response from Outscraper
-#'
 #' @return a [tibble][tibble::tibble-package]
+#' @noRd
 get_content <- function(parsed) {
   parsed[["data"]] |>
     purrr::list_rbind() |>
